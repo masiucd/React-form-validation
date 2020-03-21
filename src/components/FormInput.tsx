@@ -7,21 +7,16 @@ interface P {
   value: string;
   placeholder: string;
   name: string;
-  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const FormInput: React.FC<P> = ({
   type, value, placeholder, name,
   id,
   handleChange,
-}) => {
-  let a;
-
-
-  return (
-    <>
-      <input id={id} type={type} value={value} placeholder={placeholder} name={name} onChange={handleChange} />
-    </>
-  );
-};
+}) => (
+  <>
+    <input id={id} type={type} value={value} placeholder={placeholder} name={name} onChange={handleChange} />
+  </>
+);
 export default FormInput;
