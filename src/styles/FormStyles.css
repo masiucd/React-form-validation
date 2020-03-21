@@ -93,3 +93,17 @@ input:focus {
   color: var(--white);
   text-shadow: 1px 1px #333;
 }
+
+@media(max-width:516px) {
+  .Form {
+    width: 20rem;
+  }
+
+  input {
+    width: 15rem;
+  }
+
+  input:focus {
+    width: 17rem;
+  }
+}
