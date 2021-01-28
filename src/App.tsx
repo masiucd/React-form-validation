@@ -1,8 +1,7 @@
 import styled from "@emotion/styled"
-import Form from "./components/form"
+import Form from "./components/form/form"
 
 const Wrapper = styled.div`
-  border: 2px solid red;
   max-width: 900px;
   margin: 0 auto;
 `
