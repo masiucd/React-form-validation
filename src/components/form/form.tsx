@@ -1,4 +1,5 @@
 import styled from "@emotion/styled"
+import { useReducer } from "react"
 
 const StyledForm = styled.form`
   min-width: 60rem;
@@ -99,6 +100,49 @@ const FormGroup = styled.div`
     grid-column: span 2;
   }
 `
+
+interface State {
+  values: Record<string, string | number>
+  errors: Record<string, string>
+  touched: Record<string, boolean>
+}
+
+type Action = { type: "HANDLE_INPUT_VALUE"; payload: Record<string, string> }
+
+function reducer(state: State, action: Action) {
+  switch (action.type) {
+    case "HANDLE_INPUT_VALUE":
+      return {
+        ...state,
+        values: {
+          ...state.values,
+          ...action.payload,
+        },
+      }
+
+    default:
+      return state
+  }
+}
+
+interface UserFormProps {
+  values: Record<string, string | number>
+}
+
+const useForm = ({ values }: UserFormProps) => {
+  const [state, dispatch] = useReducer(reducer, {
+    values,
+    errors: {},
+    touched: {},
+  })
+
+  const handleChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
+    evt.persist()
+
+    dispatch({ type: "HANDLE_INPUT_VALUE", payload: { [evt.target.name]: evt.target.value } })
+  }
+  return { state, handleChange }
+}
 
 const Form = () => {
   return (
