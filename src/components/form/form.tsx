@@ -1,5 +1,5 @@
 import styled from "@emotion/styled"
-import { useReducer } from "react"
+import { ChangeEvent, useReducer } from "react"
 
 const StyledForm = styled.form`
   min-width: 60rem;
@@ -102,20 +102,31 @@ const FormGroup = styled.div`
 `
 
 interface State {
-  values: Record<string, string | number>
+  values: Record<string, string | number | boolean>
   errors: Record<string, string>
   touched: Record<string, boolean>
 }
 
-type Action = { type: "HANDLE_INPUT_VALUE"; payload: Record<string, string> }
+type Action =
+  | { type: "SET_FIELD_VALUE"; payload: Record<string, string | number | boolean> }
+  | { type: "SET_FIELD_TOUCHED"; payload: Record<string, boolean> }
 
 function reducer(state: State, action: Action) {
   switch (action.type) {
-    case "HANDLE_INPUT_VALUE":
+    case "SET_FIELD_VALUE":
       return {
         ...state,
         values: {
           ...state.values,
+          ...action.payload,
+        },
+      }
+
+    case "SET_FIELD_TOUCHED":
+      return {
+        ...state,
+        touched: {
+          ...state.touched,
           ...action.payload,
         },
       }
@@ -126,7 +137,7 @@ function reducer(state: State, action: Action) {
 }
 
 interface UserFormProps {
-  values: Record<string, string | number>
+  values: Record<string, string | number | boolean>
 }
 
 const useForm = ({ values }: UserFormProps) => {
@@ -136,36 +147,63 @@ const useForm = ({ values }: UserFormProps) => {
     touched: {},
   })
 
-  const handleChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (evt: ChangeEvent<HTMLInputElement>) => {
     evt.persist()
+    const target = evt.target
 
-    dispatch({ type: "HANDLE_INPUT_VALUE", payload: { [evt.target.name]: evt.target.value } })
+    const value = target.type === "checkbox" ? target.checked : target.value
+
+    dispatch({ type: "SET_FIELD_VALUE", payload: { [target.name]: value } })
   }
-  return { state, handleChange }
+
+  const handleBlur = (evt: ChangeEvent<HTMLInputElement>) => {
+    evt.persist()
+    dispatch({ type: "SET_FIELD_TOUCHED", payload: { [evt.target.name]: true } })
+  }
+
+  return { handleChange, handleBlur, ...state }
 }
 
 const Form = () => {
+  const form = useForm({ values: { firstName: "", lastName: "" } })
+
+  const { handleChange, ...state } = form
+
+  console.log("state", state.values)
   return (
     <StyledForm>
       <FormGroup>
         <input type="radio" name="male" id="male" />
         <Label htmlFor="male">male</Label>
 
-        <input type="radio" name="female" id="female" />
+        <input
+          type="radio"
+          name="female"
+          id="female"
+          onChange={handleChange}
+          checked={state.values.female as boolean}
+        />
         <Label htmlFor="female">female</Label>
       </FormGroup>
 
       <FormGroup>
         <Label htmlFor="firstName">
           <span>firstName</span>
-          <Input type="text" id="firstName" placeholder="firstName" />
+          <Input type="text" id="firstName" placeholder="firstName" name="firstName" />
         </Label>
       </FormGroup>
 
       <FormGroup>
         <Label htmlFor="surname">
-          <span>surname</span>
-          <Input type="text" id="surname" placeholder="surname" />
+          <span>lastName</span>
+          <Input
+            type="text"
+            id="surname"
+            placeholder="surname"
+            name="lastName"
+            value={state.values.lastName as string}
+            onChange={handleChange}
+          />
         </Label>
       </FormGroup>
 
@@ -184,21 +222,26 @@ const Form = () => {
       <FormGroup>
         <Label htmlFor="email">
           <span>email</span>
-          <Input type="email" id="email" placeholder="email" />
+          <Input type="email" id="email" placeholder="email" onChange={handleChange} />
         </Label>
       </FormGroup>
 
       <FormGroup>
         <Label htmlFor="passport">
           <span>passport</span>
-          <Input type="number" id="passport" placeholder="passport" />
+          <Input type="number" id="passport" placeholder="passport" onChange={handleChange} />
         </Label>
       </FormGroup>
 
       <FormGroup>
         <Label htmlFor="flight-number">
           <span>flight number</span>
-          <Input type="password" id="flight-number" placeholder="flight number" />
+          <Input
+            type="password"
+            id="flight-number"
+            placeholder="flight number"
+            onChange={handleChange}
+          />
         </Label>
       </FormGroup>
       <Button type="submit">sign up</Button>
