@@ -169,7 +169,6 @@ const Form = () => {
 
   const { handleChange, ...state } = form
 
-  console.log("state", state.values)
   return (
     <StyledForm>
       <FormGroup>

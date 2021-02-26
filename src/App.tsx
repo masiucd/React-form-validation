@@ -1,15 +1,16 @@
 import styled from "@emotion/styled"
-import Form from "./components/form/form"
+import Main from "./routes/main"
 
 const Wrapper = styled.div`
   max-width: 900px;
   margin: 0 auto;
+  position: relative;
 `
 
 function App() {
   return (
     <Wrapper>
-      <Form />
+      <Main />
     </Wrapper>
   )
 }
