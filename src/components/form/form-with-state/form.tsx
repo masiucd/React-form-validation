@@ -4,8 +4,6 @@ import { Debug } from "./debug"
 
 const formStyles = css`
   & {
-    /* display: flex; */
-    /* flex-flow: column wrap; */
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-gap: 10px;

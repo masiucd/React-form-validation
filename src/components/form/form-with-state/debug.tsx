@@ -45,7 +45,7 @@ export const Debug = ({ printData }: Props) => {
     <>
       {showDebug && <pre className={debugStyles}>{JSON.stringify(printData, null, 4)}</pre>}
       <button onClick={() => setShowDebug(p => !p)} className={buttonStyles}>
-        show debug
+        {showDebug ? "hide" : "show"} debug
       </button>
     </>
   )
