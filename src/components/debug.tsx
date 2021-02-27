@@ -1,20 +1,19 @@
-import { css } from "@emotion/css"
+import { css, cx } from "@emotion/css"
 import { useState } from "react"
 
 interface Props {
-  printData: Record<string, string | number | boolean>
+  printData: {
+    [key: string]: any
+  }
+  className?: string
 }
 
 const debugStyles = css`
   & {
-    position: fixed;
-    top: 12rem;
     background-color: #333;
     color: #fff;
     padding: 2rem;
     font-size: 2rem;
-    left: 50%;
-    transform: translate(-50%, -50%);
     width: 45rem;
     border: 2px solid #332332;
     box-shadow: 2px 1px 3px rgba(0, 0, 0, 0.3);
@@ -39,14 +38,16 @@ const buttonStyles = css`
   }
 `
 
-export const Debug = ({ printData }: Props) => {
+export const Debug = ({ className, printData }: Props) => {
   const [showDebug, setShowDebug] = useState(false)
   return (
-    <>
-      {showDebug && <pre className={debugStyles}>{JSON.stringify(printData, null, 4)}</pre>}
+    <div className={cx(className, "debug")}>
+      {showDebug && (
+        <pre className={cx(debugStyles, "pre-debug")}>{JSON.stringify(printData, null, 4)}</pre>
+      )}
       <button onClick={() => setShowDebug(p => !p)} className={buttonStyles}>
         {showDebug ? "hide" : "show"} debug
       </button>
-    </>
+    </div>
   )
 }

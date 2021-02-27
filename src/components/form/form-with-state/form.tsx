@@ -1,6 +1,6 @@
 import { css, cx } from "@emotion/css"
 import { useState, ChangeEvent, FormEvent } from "react"
-import { Debug } from "./debug"
+import { Debug } from "../../debug"
 
 const formStyles = css`
   & {
@@ -39,10 +39,11 @@ const Form = () => {
     male: false,
     female: false,
   })
+  const [yesOrNo, setYesOrNo] = useState("")
 
   const handleChange = (evt: ChangeEvent<HTMLInputElement>): void => {
     const { target } = evt
-
+    console.log(evt)
     const value = target.type === "checkbox" ? target.checked : target.value
 
     setFormSatate({ ...formState, [target.name]: value })
@@ -81,6 +82,30 @@ const Form = () => {
             id="female"
             checked={formState.female}
             onChange={handleChange}
+          />
+        </label>
+
+        <label htmlFor="yes">
+          <span>yes</span>
+          <input
+            type="radio"
+            checked={yesOrNo === "yes"}
+            value="yes"
+            name="yes"
+            id="yes"
+            onChange={() => setYesOrNo("yes")}
+          />
+        </label>
+
+        <label htmlFor="no">
+          <span>no</span>
+          <input
+            type="radio"
+            value="no"
+            checked={yesOrNo === "no"}
+            name="no"
+            id="no"
+            onChange={() => setYesOrNo("no")}
           />
         </label>
 

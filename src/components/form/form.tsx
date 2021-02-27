@@ -1,5 +1,7 @@
 import styled from "@emotion/styled"
-import { ChangeEvent, useReducer } from "react"
+import { ChangeEvent, FormEvent, useReducer } from "react"
+import { Debug } from "../debug"
+import { css } from "@emotion/css"
 
 const StyledForm = styled.form`
   min-width: 60rem;
@@ -136,6 +138,11 @@ function reducer(state: State, action: Action) {
   }
 }
 
+const debugStyles = css`
+  & {
+  }
+`
+
 interface UserFormProps {
   values: Record<string, string | number | boolean>
 }
@@ -150,101 +157,139 @@ const useForm = ({ values }: UserFormProps) => {
   const handleChange = (evt: ChangeEvent<HTMLInputElement>) => {
     evt.persist()
     const target = evt.target
-
-    const value = target.type === "checkbox" ? target.checked : target.value
-
-    dispatch({ type: "SET_FIELD_VALUE", payload: { [target.name]: value } })
+    console.log(evt.currentTarget)
+    dispatch({ type: "SET_FIELD_VALUE", payload: { [target.name]: target.value } })
   }
 
-  const handleBlur = (evt: ChangeEvent<HTMLInputElement>) => {
+  const handleBlur = (evt: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     evt.persist()
     dispatch({ type: "SET_FIELD_TOUCHED", payload: { [evt.target.name]: true } })
   }
 
-  return { handleChange, handleBlur, ...state }
+  const handleSubmit = (evt: FormEvent): void => {
+    evt.preventDefault()
+  }
+
+  return { handleChange, handleBlur, handleSubmit, ...state }
 }
 
 const Form = () => {
-  const form = useForm({ values: { firstName: "", lastName: "" } })
+  const form = useForm({
+    values: { firstName: "", lastName: "", email: "", female: "", male: "" },
+  })
 
-  const { handleChange, ...state } = form
+  const { handleChange, handleBlur, handleSubmit, ...state } = form
 
   return (
-    <StyledForm>
-      <FormGroup>
-        <input type="radio" name="male" id="male" />
-        <Label htmlFor="male">male</Label>
+    <div>
+      <StyledForm onSubmit={handleSubmit}>
+        <FormGroup>
+          <Label htmlFor="male">
+            <span>male</span>
+            <input
+              type="radio"
+              // value={state.values.male as string}
+              value="male"
+              name="male"
+              id="male"
+              onChange={handleChange}
+              checked={state.values.male === "male"}
+            />
+          </Label>
 
-        <input
-          type="radio"
-          name="female"
-          id="female"
-          onChange={handleChange}
-          checked={state.values.female as boolean}
-        />
-        <Label htmlFor="female">female</Label>
-      </FormGroup>
+          <Label htmlFor="female">
+            <span>female</span>
+            <input
+              type="radio"
+              // value={state.values.female as string}
+              value="female"
+              name="female"
+              id="female"
+              onChange={handleChange}
+              checked={state.values.female === "female"}
+            />
+          </Label>
+        </FormGroup>
 
-      <FormGroup>
-        <Label htmlFor="firstName">
-          <span>firstName</span>
-          <Input type="text" id="firstName" placeholder="firstName" name="firstName" />
-        </Label>
-      </FormGroup>
+        <FormGroup>
+          <Label htmlFor="firstName">
+            <span>firstName</span>
+            <Input
+              type="text"
+              id="firstName"
+              placeholder="firstName"
+              name="firstName"
+              value={state.values.firstName as string}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+          </Label>
+        </FormGroup>
 
-      <FormGroup>
-        <Label htmlFor="surname">
-          <span>lastName</span>
-          <Input
-            type="text"
-            id="surname"
-            placeholder="surname"
-            name="lastName"
-            value={state.values.lastName as string}
-            onChange={handleChange}
-          />
-        </Label>
-      </FormGroup>
+        <FormGroup>
+          <Label htmlFor="surname">
+            <span>lastName</span>
+            <Input
+              type="text"
+              id="surname"
+              placeholder="surname"
+              name="lastName"
+              value={state.values.lastName as string}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+          </Label>
+        </FormGroup>
 
-      <FormGroup className="country">
-        <Label htmlFor="country">
-          <span>country</span>
-        </Label>
-        <Select id="country">
-          <option value="">country</option>
-          <option value="sweden">sweden</option>
-          <option value="usa">usa</option>
-          <option value="poland">poland</option>
-        </Select>
-      </FormGroup>
+        <FormGroup className="country">
+          <Label htmlFor="country">
+            <span>country</span>
+          </Label>
 
-      <FormGroup>
-        <Label htmlFor="email">
-          <span>email</span>
-          <Input type="email" id="email" placeholder="email" onChange={handleChange} />
-        </Label>
-      </FormGroup>
+          <Select id="country" onBlur={handleBlur}>
+            <option value="">country</option>
+            <option value="sweden">sweden</option>
+            <option value="usa">usa</option>
+            <option value="poland">poland</option>
+          </Select>
+        </FormGroup>
 
-      <FormGroup>
-        <Label htmlFor="passport">
-          <span>passport</span>
-          <Input type="number" id="passport" placeholder="passport" onChange={handleChange} />
-        </Label>
-      </FormGroup>
+        <FormGroup>
+          <Label htmlFor="email">
+            <span>email</span>
+            <Input type="email" id="email" placeholder="email" onChange={handleChange} />
+          </Label>
+        </FormGroup>
 
-      <FormGroup>
-        <Label htmlFor="flight-number">
-          <span>flight number</span>
-          <Input
-            type="password"
-            id="flight-number"
-            placeholder="flight number"
-            onChange={handleChange}
-          />
-        </Label>
-      </FormGroup>
-      <Button type="submit">sign up</Button>
-    </StyledForm>
+        <FormGroup>
+          <Label htmlFor="passport">
+            <span>passport</span>
+            <Input
+              type="number"
+              id="passport"
+              placeholder="passport"
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+          </Label>
+        </FormGroup>
+
+        <FormGroup>
+          <Label htmlFor="flight-number">
+            <span>flight number</span>
+            <Input
+              type="password"
+              id="flight-number"
+              placeholder="flight number"
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+          </Label>
+        </FormGroup>
+        <Button type="submit">sign up</Button>
+      </StyledForm>
+      <Debug printData={state} className={debugStyles} />
+    </div>
   )
 }
 
