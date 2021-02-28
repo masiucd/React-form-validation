@@ -109,7 +109,13 @@ const useForm = ({ values, validate, onSubmit }: UserFormProps) => {
     }
   }
 
-  return { handleChange, handleBlur, handleSubmit, ...state }
+  const getFieldsProps = (fieldName: string) => ({
+    value: state.values[fieldName],
+    onChange: handleChange,
+    onBlur: handleBlur,
+  })
+
+  return { handleChange, handleBlur, handleSubmit, getFieldsProps, ...state }
 }
 
 export { useForm }

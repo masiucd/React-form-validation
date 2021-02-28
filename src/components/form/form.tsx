@@ -2,7 +2,7 @@ import styled from "@emotion/styled"
 import { Debug } from "../debug"
 import { css } from "@emotion/css"
 import { useForm } from "../../hooks/form"
-import { emailRe } from "../../utils/helpers"
+import { emailRe, sleep } from "../../utils/helpers"
 import { useCallback } from "react"
 
 const StyledForm = styled.form`
@@ -75,7 +75,20 @@ const Input = styled.input`
   padding: 0 0.8rem;
 `
 
-const Select = styled.select``
+const Select = styled.select`
+  box-shadow: var(--shadow-md);
+  height: 4.8rem;
+  font-size: 1.6rem;
+  outline: 0;
+  border-radius: var(--border-radius-lv-3);
+  transition: var(--transition-1);
+  &:focus {
+    box-shadow: var(--shadow-xl);
+    transform: scale(1.03);
+  }
+
+  padding: 0 0.8rem;
+`
 
 const FormGroup = styled.div`
   &:first-of-type {
@@ -135,11 +148,19 @@ const validate = (values: FormValues) => {
   if ((values.gender as string).length < 0) {
     errors["gender"] = "please provide a gender"
   }
-  if ((values.flightNumber as string).length < 0) {
-    errors["flightNumber"] = "please provide a gender"
+  if ((values.passport as string).length < 8) {
+    errors["passport"] = "please provide your passport"
+  }
+  if ((values.flightNumber as string).length < 5) {
+    errors["flightNumber"] = "please provide a real flight number"
   }
 
   return errors
+}
+
+const onSubmit = async (values: FormValues) => {
+  await sleep(500)
+  alert(JSON.stringify(values, null, 4))
 }
 
 const Form = () => {
@@ -150,13 +171,11 @@ const Form = () => {
       email: "",
       gender: "",
       country: "",
-      password: "",
+      passport: "",
       flightNumber: "",
     } as FormValues,
     validate: useCallback(validate, []),
-    onSubmit: (values: FormValues) => {
-      console.log("yooo")
-    },
+    onSubmit,
   })
 
   const { handleChange, handleBlur, handleSubmit, values, errors, touched } = form
@@ -270,6 +289,7 @@ const Form = () => {
             <Input
               type="number"
               id="passport"
+              name="passport"
               placeholder="passport"
               onChange={handleChange}
               onBlur={handleBlur}
