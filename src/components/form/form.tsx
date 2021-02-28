@@ -1,7 +1,15 @@
 import styled from "@emotion/styled"
+<<<<<<< HEAD
 import { ChangeEvent, FormEvent, useReducer } from "react"
 import { Debug } from "../debug"
 import { css } from "@emotion/css"
+=======
+import { Debug } from "../debug"
+import { css } from "@emotion/css"
+import { useForm } from "../../hooks/form"
+import { emailRe } from "../../utils/helpers"
+import { useCallback } from "react"
+>>>>>>> develop
 
 const StyledForm = styled.form`
   min-width: 60rem;
@@ -103,39 +111,13 @@ const FormGroup = styled.div`
   }
 `
 
-interface State {
-  values: Record<string, string | number | boolean>
-  errors: Record<string, string>
-  touched: Record<string, boolean>
-}
-
-type Action =
-  | { type: "SET_FIELD_VALUE"; payload: Record<string, string | number | boolean> }
-  | { type: "SET_FIELD_TOUCHED"; payload: Record<string, boolean> }
-
-function reducer(state: State, action: Action) {
-  switch (action.type) {
-    case "SET_FIELD_VALUE":
-      return {
-        ...state,
-        values: {
-          ...state.values,
-          ...action.payload,
-        },
-      }
-
-    case "SET_FIELD_TOUCHED":
-      return {
-        ...state,
-        touched: {
-          ...state.touched,
-          ...action.payload,
-        },
-      }
-
-    default:
-      return state
+const debugStyles = css`
+  & {
+    pre {
+      width: 100%;
+    }
   }
+<<<<<<< HEAD
 }
 
 const debugStyles = css`
@@ -171,14 +153,64 @@ const useForm = ({ values }: UserFormProps) => {
   }
 
   return { handleChange, handleBlur, handleSubmit, ...state }
+=======
+`
+
+const ErrorMessage = styled.p`
+  color: var(--white);
+  background-color: var(--warning);
+  padding: 0.5rem;
+  border-radius: var(--border-radius-lv-3);
+`
+
+const validate = (values: FormValues) => {
+  const errors: Record<string, string> = {}
+  if ((values.firstName as string).length < 5) {
+    errors["firstName"] = "first name is to short! "
+  }
+  if ((values.lastName as string).length < 10) {
+    errors["lastName"] = "last name is to short! "
+  }
+
+  if (!(values.email as string).match(emailRe)) {
+    errors["email"] = "No correct format of the email "
+  }
+  if ((values.gender as string).length < 0) {
+    errors["gender"] = "please provide a gender"
+  }
+  if ((values.flightNumber as string).length < 0) {
+    errors["flightNumber"] = "please provide a gender"
+  }
+
+  return errors
+>>>>>>> develop
 }
 
 const Form = () => {
   const form = useForm({
+<<<<<<< HEAD
     values: { firstName: "", lastName: "", email: "", female: "", male: "" },
   })
 
   const { handleChange, handleBlur, handleSubmit, ...state } = form
+=======
+    values: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      gender: "",
+      country: "",
+      password: "",
+      flightNumber: "",
+    } as FormValues,
+    validate: useCallback(validate, []),
+    onSubmit: (values: FormValues) => {
+      console.log("yooo")
+    },
+  })
+
+  const { handleChange, handleBlur, handleSubmit, values, errors, touched } = form
+>>>>>>> develop
 
   return (
     <div>
@@ -188,6 +220,7 @@ const Form = () => {
             <span>male</span>
             <input
               type="radio"
+<<<<<<< HEAD
               // value={state.values.male as string}
               value="male"
               name="male"
@@ -195,12 +228,23 @@ const Form = () => {
               onChange={handleChange}
               checked={state.values.male === "male"}
             />
+=======
+              checked={values.gender === "male"}
+              value="male"
+              name="gender"
+              id="male"
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+            {errors.gender && touched.gender && <ErrorMessage>{errors.gender}</ErrorMessage>}
+>>>>>>> develop
           </Label>
 
           <Label htmlFor="female">
             <span>female</span>
             <input
               type="radio"
+<<<<<<< HEAD
               // value={state.values.female as string}
               value="female"
               name="female"
@@ -208,6 +252,16 @@ const Form = () => {
               onChange={handleChange}
               checked={state.values.female === "female"}
             />
+=======
+              value="female"
+              name="gender"
+              id="female"
+              onChange={handleChange}
+              checked={values.gender === "female"}
+              onBlur={handleBlur}
+            />
+            {errors.gender && touched.gender && <ErrorMessage>{errors.gender}</ErrorMessage>}
+>>>>>>> develop
           </Label>
         </FormGroup>
 
@@ -219,10 +273,20 @@ const Form = () => {
               id="firstName"
               placeholder="firstName"
               name="firstName"
+<<<<<<< HEAD
               value={state.values.firstName as string}
               onChange={handleChange}
               onBlur={handleBlur}
             />
+=======
+              value={values.firstName as string}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+            {errors.firstName && touched.firstName && (
+              <ErrorMessage>{errors.firstName}</ErrorMessage>
+            )}
+>>>>>>> develop
           </Label>
         </FormGroup>
 
@@ -234,16 +298,25 @@ const Form = () => {
               id="surname"
               placeholder="surname"
               name="lastName"
+<<<<<<< HEAD
               value={state.values.lastName as string}
               onChange={handleChange}
               onBlur={handleBlur}
             />
+=======
+              value={values.lastName as string}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+            {errors.lastName && touched.lastName && <ErrorMessage>{errors.lastName}</ErrorMessage>}
+>>>>>>> develop
           </Label>
         </FormGroup>
 
         <FormGroup className="country">
           <Label htmlFor="country">
             <span>country</span>
+<<<<<<< HEAD
           </Label>
 
           <Select id="country" onBlur={handleBlur}>
@@ -252,12 +325,42 @@ const Form = () => {
             <option value="usa">usa</option>
             <option value="poland">poland</option>
           </Select>
+=======
+
+            <Select
+              id="country"
+              onBlur={handleBlur}
+              name="country"
+              value={values.country as string}
+              onChange={handleChange}
+            >
+              <option value="">country</option>
+              <option value="sweden">sweden</option>
+              <option value="usa">usa</option>
+              <option value="poland">poland</option>
+            </Select>
+            {errors.country && touched.country && <ErrorMessage>{errors.country}</ErrorMessage>}
+          </Label>
+>>>>>>> develop
         </FormGroup>
 
         <FormGroup>
           <Label htmlFor="email">
             <span>email</span>
+<<<<<<< HEAD
             <Input type="email" id="email" placeholder="email" onChange={handleChange} />
+=======
+            <Input
+              type="email"
+              id="email"
+              placeholder="email"
+              name="email"
+              onChange={handleChange}
+              value={values.email as string}
+              onBlur={handleBlur}
+            />
+            {errors.email && touched.email && <ErrorMessage>{errors.email}</ErrorMessage>}
+>>>>>>> develop
           </Label>
         </FormGroup>
 
@@ -270,7 +373,13 @@ const Form = () => {
               placeholder="passport"
               onChange={handleChange}
               onBlur={handleBlur}
+<<<<<<< HEAD
             />
+=======
+              value={values.passport as string}
+            />
+            {errors.passport && touched.passport && <ErrorMessage>{errors.passport}</ErrorMessage>}
+>>>>>>> develop
           </Label>
         </FormGroup>
 
@@ -278,17 +387,35 @@ const Form = () => {
           <Label htmlFor="flight-number">
             <span>flight number</span>
             <Input
+<<<<<<< HEAD
               type="password"
               id="flight-number"
               placeholder="flight number"
               onChange={handleChange}
               onBlur={handleBlur}
             />
+=======
+              type="text"
+              id="flight-number"
+              placeholder="flight number"
+              name="flightNumber"
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={values.flightNumber as string}
+            />
+            {errors.flightNumber && touched.flightNumber && (
+              <ErrorMessage>{errors.flightNumber}</ErrorMessage>
+            )}
+>>>>>>> develop
           </Label>
         </FormGroup>
         <Button type="submit">sign up</Button>
       </StyledForm>
+<<<<<<< HEAD
       <Debug printData={state} className={debugStyles} />
+=======
+      <Debug printData={{ values, errors, touched }} className={debugStyles} />
+>>>>>>> develop
     </div>
   )
 }

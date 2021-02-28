@@ -121,7 +121,7 @@ const Form = () => {
 
         <button type="submit">submit</button>
       </form>
-      <Debug printData={formState} />
+      <Debug printData={{ ...formState, yesOrNo: yesOrNo }} />
     </>
   )
 }
