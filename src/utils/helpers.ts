@@ -3,10 +3,10 @@ export const emailRe = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".
 export const isObject = (obj: null) => obj !== null && typeof obj === "object"
 
 export function setNestedObjectValues(
-  object: any,
-  value: any,
+  object: Record<string, any>,
+  value: boolean,
   visited = new WeakMap(),
-  response: any = {}
+  response: Record<string, any> = {}
 ) {
   for (let k of Object.keys(object)) {
     const val = object[k]
@@ -28,3 +28,4 @@ export function setNestedObjectValues(
 }
 
 export const sleep = (ms: number) => new Promise(r => setTimeout(r, ms))
+export const callAll = (...fns: Function[]) => (...args: any[]) => fns.forEach(fn => fn?.(...args))

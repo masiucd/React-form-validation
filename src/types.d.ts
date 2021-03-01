@@ -9,3 +9,4 @@ interface Values {
 }
 
 type FormValues = Record<string, string | number | boolean>
+type StringRecord = Record<string, string>
