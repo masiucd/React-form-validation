@@ -1,3 +1,5 @@
 # React form
 
-2 examples creating form with usual `useState` and thorough a custom hook, with a reducer.
+4 examples how to creating forms in `React`.
+One with usual `useState`, another thorough a custom hook, with a reducer.
+The third with formHook byt using `propGetters `pattern

@@ -1,14 +1,18 @@
+<<<<<<< HEAD
 import styled from "@emotion/styled"
 <<<<<<< HEAD
 import { ChangeEvent, FormEvent, useReducer } from "react"
 import { Debug } from "../debug"
 import { css } from "@emotion/css"
 =======
+=======
+>>>>>>> develop
 import { Debug } from "../debug"
 import { css } from "@emotion/css"
 import { useForm } from "../../hooks/form"
-import { emailRe } from "../../utils/helpers"
+import { emailRe, sleep } from "../../utils/helpers"
 import { useCallback } from "react"
+<<<<<<< HEAD
 >>>>>>> develop
 
 const StyledForm = styled.form`
@@ -110,6 +114,9 @@ const FormGroup = styled.div`
     grid-column: span 2;
   }
 `
+=======
+import { Button, ErrorMessage, FormGroup, Input, Label, Select, StyledForm } from "./styles"
+>>>>>>> develop
 
 const debugStyles = css`
   & {
@@ -156,13 +163,6 @@ const useForm = ({ values }: UserFormProps) => {
 =======
 `
 
-const ErrorMessage = styled.p`
-  color: var(--white);
-  background-color: var(--warning);
-  padding: 0.5rem;
-  border-radius: var(--border-radius-lv-3);
-`
-
 const validate = (values: FormValues) => {
   const errors: Record<string, string> = {}
   if ((values.firstName as string).length < 5) {
@@ -178,12 +178,20 @@ const validate = (values: FormValues) => {
   if ((values.gender as string).length < 0) {
     errors["gender"] = "please provide a gender"
   }
-  if ((values.flightNumber as string).length < 0) {
-    errors["flightNumber"] = "please provide a gender"
+  if ((values.passport as string).length < 8) {
+    errors["passport"] = "please provide your passport"
+  }
+  if ((values.flightNumber as string).length < 5) {
+    errors["flightNumber"] = "please provide a real flight number"
   }
 
   return errors
 >>>>>>> develop
+}
+
+const onSubmit = async (values: FormValues) => {
+  await sleep(500)
+  alert(JSON.stringify(values, null, 4))
 }
 
 const Form = () => {
@@ -200,13 +208,11 @@ const Form = () => {
       email: "",
       gender: "",
       country: "",
-      password: "",
+      passport: "",
       flightNumber: "",
     } as FormValues,
     validate: useCallback(validate, []),
-    onSubmit: (values: FormValues) => {
-      console.log("yooo")
-    },
+    onSubmit,
   })
 
   const { handleChange, handleBlur, handleSubmit, values, errors, touched } = form
@@ -370,6 +376,7 @@ const Form = () => {
             <Input
               type="number"
               id="passport"
+              name="passport"
               placeholder="passport"
               onChange={handleChange}
               onBlur={handleBlur}
